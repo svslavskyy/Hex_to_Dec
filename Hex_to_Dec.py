@@ -81,15 +81,16 @@ def print_func():
 
 
 layout = [
-    [sg.Text('Число с плавающей точкой в HEX формате'), sg.InputText('')],
+    [sg.Text('Число с плавающей точкой в HEX формате', font=('Helvetica', 16)), sg.InputText(''),],
     [sg.Output(size=(130, 30), key='-OUTPUT-', font=('Courier', 12))],
     [sg.Submit(), sg.Button('Clear'), sg.Button('FAQ')]
 ]
 
-window = sg.Window('HEX to DEC', layout, resizable=True)
-
+window = sg.Window('HEX to DEC', layout, resizable=True, element_justification="center").Finalize()
+# window.Maximize()
 while True:
     event, values = window.read()
+
     if event == 'FAQ':
         sg.popup('1) При невозможности вставить или скопировать текст - используйте английскую раскладку\n\n'
                  '2) Вводите Hex числа в формате 16 или 8 символов\n\n'
