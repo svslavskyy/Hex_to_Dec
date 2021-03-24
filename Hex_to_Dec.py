@@ -81,15 +81,16 @@ def print_func():
 
 
 layout = [
-    [sg.Text('Число с плавающей точкой в HEX формате'), sg.InputText('')],
+    [sg.Text('Число с плавающей точкой в HEX формате', font=('Helvetica', 16)), sg.InputText(''),],
     [sg.Output(size=(130, 30), key='-OUTPUT-', font=('Courier', 12))],
     [sg.Submit(), sg.Button('Clear'), sg.Button('FAQ')]
 ]
 
-window = sg.Window('HEX to DEC', layout, resizable=True)
-
+window = sg.Window('HEX to DEC', layout, resizable=True, element_justification="center").Finalize()
+# window.Maximize()
 while True:
     event, values = window.read()
+
     if event == 'FAQ':
         sg.popup('1) При невозможности вставить или скопировать текст - используйте английскую раскладку\n\n'
                  '2) Вводите Hex числа в формате 16 или 8 символов\n\n'
@@ -100,37 +101,34 @@ while True:
     if event == 'Clear':
         window['-OUTPUT-'].update('')
         continue
-    standart_hex = "ABCDEF0123456789 "
+    hex = values[0].replace(" ", "")
+    hex = hex.upper()
+
+
+    standart_hex = "ABCDEF0123456789"
     hex_to_work = ''
     error = False
-    for x in values[0]:
+    for x in hex:
         if (x in standart_hex):
             hex_to_work += x
         else:
             error = False
             break
         error = True
+    stop_name = ['00000000', '0000000000000000', 'FFFFFFFF', 'FFFFFFFFFFFFFFFF']
+    for x in stop_name:
+        if hex == x:
+            print('Введено граничное значение')
+            error = False
+            break
     if error == True:
-        if len(values[0]) == 8:
-            hex_expand = expand_hex(values[0])
-            hex_expand += "00000000"
-            hex = values[0] + "00000000"
-            print_func()
-        elif len(values[0]) == 16:
-            hex = values[0].upper()
-            hex_expand = expand_hex(hex)
-            print_func()
-        elif len(values[0]) == 19:
-            hex = values[0].replace(" ", "")
-            hex = hex.upper()
-            hex_expand = expand_hex(hex)
-            print_func()
-        elif len(values[0]) == 9:
-            hex = values[0].replace(" ", "")
-            hex = hex.upper()
+        if len(hex) == 8:
             hex_expand = expand_hex(hex)
             hex_expand += "00000000"
             hex = hex + "00000000"
+            print_func()
+        elif len(hex) == 16:
+            hex_expand = expand_hex(hex)
             print_func()
         else:
             print("Введите Hex число с 8 или 16 знаками")
